@@ -1,3 +1,3 @@
-from .theiapod import theiapod
+from .impl import theiapod
 
-__all__ = ['theiapodworkspace']
+__all__ = ['theiapod']
