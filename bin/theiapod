@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+
+import theiapod as tp
+
+def main():
+  print('test');
+  tp.theiapod(repository='--')
+
+if __name__== "__main__":
+  main()

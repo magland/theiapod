@@ -10,6 +10,7 @@ setuptools.setup(
     description="Self-host gitpod-style workspaces for github repositories using theia",
     url="https://github.com/magland/theiapod",
     packages=setuptools.find_packages(),
+    scripts=['bin/theiapod'],
     package_data={},
     install_requires=[
     ],
