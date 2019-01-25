@@ -19,7 +19,7 @@ def theiapod(*,repository,port=3000,image=None,expose_ports=[],mount_tmp=True):
         else:
             opts.append('-p {}:{}'.format(pp,pp))
 
-    cmd='docker run {opts} {image} {repository}'
+    cmd='docker run {opts} {image} {repository} {port}'
     cmd=cmd.replace('{opts}',' '.join(opts))
     cmd=cmd.replace('{src_dir}',src_dir)
     cmd=cmd.replace('{image}',image)
