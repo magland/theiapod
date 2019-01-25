@@ -14,9 +14,16 @@ RUN yarn theia build
 EXPOSE 3000
 ENV SHELL /bin/bash
 
+USER gitpod
+RUN pip install pyyaml
+RUN pip install jupyterlab
+
+USER root
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chown gitpod:gitpod /entrypoint.sh
 RUN chown gitpod:gitpod /home
 ENTRYPOINT ["/entrypoint.sh"]
 
 USER gitpod
+

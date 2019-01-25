@@ -7,10 +7,28 @@ def main():
   parser = argparse.ArgumentParser(description = 'Run a spikeforest processing batch')
   parser.add_argument('repository',help='The name of the repository')
   parser.add_argument('--port',help='Port to listen on', default='3000')
+  parser.add_argument('--expose_port','-p',help='Port to expose', action='append')
   parser.add_argument('--image',help='The docker image to use',default=None)
 
   args = parser.parse_args()
-  tp.theiapod(repository=args.repository,port=int(args.port),image=args.image)
+
+  expose_ports=_get_expose_ports_from_arg_list(args.expose_port)
+
+  tp.theiapod(repository=args.repository,port=int(args.port),image=args.image,expose_ports=expose_ports)
+
+def _get_expose_ports_from_arg_list(A):
+  expose_ports=[]
+  for aa in A:
+    list=aa.split(',')
+    for pp in list:
+      vals=pp.split(':')
+      if len(vals)==1:
+        expose_ports.append(int(vals[0]))
+      elif len(vals)==2:
+        expose_ports.append((int(vals[0]),int(vals[1])))
+      else:
+        raise Exception('Invalid expose_port.')
+  return expose_ports
 
 if __name__== "__main__":
   main()

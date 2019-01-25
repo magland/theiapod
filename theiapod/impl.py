@@ -1,14 +1,27 @@
 import subprocess
+import os
 
-def theiapod(*,repository,port=3000,image=None):
+src_dir=os.path.dirname(os.path.realpath(__file__))
+
+def theiapod(*,repository,port=3000,image=None,expose_ports=[],mount_tmp=True):
     if image is None:
         image='magland/theiapod:latest'
     opts=[
         '-p {port}:{port}',
-        '-it'
+        '-it',
+        '-v {src_dir}/theiapod_init_in_container.py:/theiapod_init'
     ]
+    if mount_tmp:
+        opts.append('-v /tmp:/tmp')
+    for pp in expose_ports:
+        if type(pp)==tuple:
+            opts.append('-p {}:{}'.format(pp[0],pp[1]))
+        else:
+            opts.append('-p {}:{}'.format(pp,pp))
+
     cmd='docker run {opts} {image} {repository}'
     cmd=cmd.replace('{opts}',' '.join(opts))
+    cmd=cmd.replace('{src_dir}',src_dir)
     cmd=cmd.replace('{image}',image)
     cmd=cmd.replace('{repository}',repository)
     cmd=cmd.replace('{port}',str(port))
