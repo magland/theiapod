@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 
+import argparse
 import theiapod as tp
 
 def main():
-  print('test');
-  tp.theiapod(repository='--')
+  parser = argparse.ArgumentParser(description = 'Run a spikeforest processing batch')
+  parser.add_argument('repository',help='The name of the repository')
+  parser.add_argument('--port',help='Port to listen on', default='3000')
+  parser.add_argument('--image',help='The docker image to use',default=None)
+
+  args = parser.parse_args()
+  tp.theiapod(repository=args.repository,port=int(args.port),image=args.image)
 
 if __name__== "__main__":
   main()

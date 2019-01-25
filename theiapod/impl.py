@@ -1,6 +1,8 @@
 import subprocess
 
-def theiapod(*,repository,port=3000,image='magland/theiapod:latest'):
+def theiapod(*,repository,port=3000,image=None):
+    if image is None:
+        image='magland/theiapod:latest'
     opts=[
         '-p {port}:{port}',
         '-it'
