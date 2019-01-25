@@ -4,6 +4,7 @@ import shutil
 import tempfile
 import random
 import string
+import yaml
 
 src_dir=os.path.dirname(os.path.realpath(__file__))
 
@@ -17,8 +18,25 @@ def theiapod(*,repository='',port=3000,image=None,expose_ports=[],mount_tmp=True
             raise Exception('Host working directory already exists: '+host_working_directory)
         _git_clone_into_directory(repository,host_working_directory)
 
+    if os.path.exists(host_working_directory+'/.theiapod.yml'):
+        config=_parse_yaml(host_working_directory+'/.theiapod.yml')
+    else:
+        config=_parse_yaml(host_working_directory+'/.gitpod.yml')
+        if 'image' in config:
+            config['image']=None # don't use the gitpod image
+    if not config:
+        config={}
+
+    print(':::::::::::::::::::::::config:',config)
+    if image is None:
+        if 'image' in config:
+            image=config['image']
+        
     if image is None:
         image='magland/theiapod:latest'
+
+    print('Using image: '+image)
+
     opts=[
         '-p {port}:{port}',
         '-it',
@@ -50,6 +68,14 @@ def theiapod(*,repository='',port=3000,image=None,expose_ports=[],mount_tmp=True
 #def _write_text_file(fname,txt):
 #    with open(fname,'w') as f:
 #        f.write(txt)
+
+def _parse_yaml(fname):
+  try:
+    with open(fname) as f:
+      obj=yaml.load(f)
+    return obj
+  except:
+    return None
 
 def _get_random_directory():
     return tempfile.gettempdir()+'/theiapod_workspace_'+_get_random_string(10)

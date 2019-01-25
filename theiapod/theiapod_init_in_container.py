@@ -2,26 +2,33 @@
 
 import yaml
 import subprocess
+import os
 
 def main():
-  gitpod=_parse_gitpod_yaml()
-  print('gitpod',gitpod)
-  if 'tasks' in gitpod:
-    for task in gitpod['tasks']:
-      if 'command' in task:
-        _run_command_and_print_output(task['command'])
 
-def _parse_gitpod_yaml():
+  config=None  
+  if os.path.exists('.theiapod.yml'):
+    config=_parse_yaml('.theiapod.yml')
+  else:
+    config=_parse_yaml('.gitpod.yml')
+
+  print(':::::::::::::::::::::::config:',config)
+  if config:
+    if 'tasks' in config:
+      for task in config['tasks']:
+        if 'command' in task:
+          shell_execute(task['command'])
+
+def _parse_yaml(fname):
   try:
-    fname='.gitpod.yml'
     with open(fname) as f:
       obj=yaml.load(f)
     return obj
   except:
-    return {}
+    return None
 
-def execute(cmd):
-    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
+def shell_execute(cmd):
+    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True, shell=True)
     for stdout_line in iter(popen.stdout.readline, ""):
         #yield stdout_line
         print(stdout_line,end='\r')
@@ -29,10 +36,6 @@ def execute(cmd):
     return_code = popen.wait()
     if return_code:
         raise subprocess.CalledProcessError(return_code, cmd)
-
-def _run_command_and_print_output(cmd):
-    print('RUNNING: '+cmd);
-    execute(cmd.split())
 
 if __name__== "__main__":
   main()
