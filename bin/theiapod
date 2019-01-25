@@ -14,7 +14,7 @@ def main():
   args = parser.parse_args()
 
   expose_ports=_get_expose_ports_from_arg_list(args.expose_port)
-  
+
   if args.repository:
     args.repository=args.repository[0]
 
@@ -27,6 +27,8 @@ def main():
   )
 
 def _get_expose_ports_from_arg_list(A):
+  if not A:
+    return []
   expose_ports=[]
   for aa in A:
     list=aa.split(',')
