@@ -5,16 +5,26 @@ import theiapod as tp
 
 def main():
   parser = argparse.ArgumentParser(description = 'Run a spikeforest processing batch')
-  parser.add_argument('repository',help='The name of the repository')
+  parser.add_argument('repository',help='The name of the repository',nargs='*')
   parser.add_argument('--port',help='Port to listen on', default='3000')
   parser.add_argument('--expose_port','-p',help='Port to expose', action='append')
   parser.add_argument('--image',help='The docker image to use',default=None)
+  parser.add_argument('--host_working_directory','-w',help='The working directory on the host to use',default=None)
 
   args = parser.parse_args()
 
   expose_ports=_get_expose_ports_from_arg_list(args.expose_port)
+  
+  if args.repository:
+    args.repository=args.repository[0]
 
-  tp.theiapod(repository=args.repository,port=int(args.port),image=args.image,expose_ports=expose_ports)
+  tp.theiapod(
+    repository=args.repository,
+    port=int(args.port),
+    image=args.image,
+    expose_ports=expose_ports,
+    host_working_directory=args.host_working_directory
+  )
 
 def _get_expose_ports_from_arg_list(A):
   expose_ports=[]

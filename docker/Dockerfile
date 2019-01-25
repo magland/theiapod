@@ -1,11 +1,16 @@
-FROM gitpod/workspace-full
+FROM python:3.7-stretch
 
+#RUN apt-get update && apt-get install -y software-properties-common
+
+# Node
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get update && apt-get install nodejs
+
+### Yarn ###
 RUN npm install -g yarn
 
+## Theia
 ARG version=latest
-
-USER root
-
 WORKDIR /home/theia
 ADD $version.package.json ./package.json
 ARG GITHUB_TOKEN
@@ -14,16 +19,15 @@ RUN yarn theia build
 EXPOSE 3000
 ENV SHELL /bin/bash
 
-USER gitpod
+RUN apt-get install sudo
+
+RUN echo "python version:" && python --version
+
 RUN pip install pyyaml
 RUN pip install jupyterlab
 
-USER root
-
 COPY entrypoint.sh /entrypoint.sh
-RUN chown gitpod:gitpod /entrypoint.sh
-RUN chown gitpod:gitpod /home
+#RUN chown gitpod:gitpod /entrypoint.sh
+#RUN chown gitpod:gitpod /home
 ENTRYPOINT ["/entrypoint.sh"]
-
-USER gitpod
-
+#ENTRYPOINT ["/bin/bash"]

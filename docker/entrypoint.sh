@@ -1,13 +1,37 @@
 #!/bin/bash
 
-set -e
+set -ex
 
-git clone $1 /home/project
-cd /home/project
+PROJECT_DIRECTORY=$1
+PORT=$2
+USER=$3
+UID_=$4
 
+useradd -l -u $UID_ -G sudo -md /home/$USER -s /bin/bash -p $USER $USER
+sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
+
+chown -R $USER:$USER $PROJECT_DIRECTORY
 if [ -f "/theiapod_init" ]; then
-   /theiapod_init
+	chmod a+x /theiapod_init
+	chown $USER:$USER /theiapod_init
 fi
 
+cat >/the_script.sh <<EOL
+#!/bin/bash
+set -ex
+
+cd $PROJECT_DIRECTORY
+python3 -m venv /home/$USER/venv
+source /home/$USER/venv/bin/activate
+pip install pyyaml
+if [ -f "/theiapod_init" ]; then
+	echo "RUNNING /theiapod_init"
+	/theiapod_init
+fi
 cd /home/theia
-yarn theia start /home/project --hostname=0.0.0.0 --port=$2
+yarn theia start $PROJECT_DIRECTORY --hostname=0.0.0.0 --port=$PORT
+... 
+EOL
+chmod a+x /the_script.sh
+
+sudo -u $USER bash -c "/the_script.sh"
