@@ -13,6 +13,7 @@ def theiapod(*,repository='',port=3000,image=None,expose_ports=[],volumes=[],mou
         if not repository:
             raise Exception('You must either specify a repository or a host working directory.')
         host_working_directory=_get_random_directory()
+    host_working_directory=os.path.abspath(host_working_directory)
     if repository:
         if os.path.exists(host_working_directory):
             raise Exception('Host working directory already exists: '+host_working_directory)
@@ -48,14 +49,31 @@ def theiapod(*,repository='',port=3000,image=None,expose_ports=[],volumes=[],mou
     if mount_tmp:
         opts.append('-v /tmp:/tmp')
     for pp in expose_ports:
-        if type(pp)==tuple:
+        if not (type(pp)==tuple):
+            pp=(pp,pp)
+        pp0_list=str(pp[0]).split('-')
+        pp1_list=str(pp[1]).split('-')
+        if len(pp0_list)!=len(pp1_list):
+            raise Exception('Invalid -p option')
+        if len(pp0_list)==1:
             opts.append('-p {}:{}'.format(pp[0],pp[1]))
+        elif len(pp0_list)==2:
+            p0min=int(pp0_list[0])
+            p0max=int(pp0_list[1])
+            p1min=int(pp1_list[0])
+            p1max=int(pp1_list[1])
+            p0s=list(range(p0min,p0max+1))
+            p1s=list(range(p1min,p1max+1))
+            if len(p0s)!=len(p1s):
+                raise Exception('Invalid -p option')
+            for i in range(len(p0s)):
+                opts.append('-p {}:{}'.format(p0s[i],p1s[i]))
         else:
-            opts.append('-p {}:{}'.format(pp,pp))
+            raise Exception('Invalid -p option')
 
     for vv in volumes:
         if type(vv)==tuple:
-            opts.append('-v {}:{}'.format(vv[0],vv[1]))
+            opts.append('-v {}:{}'.format(os.path.abspath(vv[0]),os.path.abspath(vv[1])))
         else:
             raise Exception('volumes must be tuples.')
 

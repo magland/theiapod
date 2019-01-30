@@ -7,7 +7,7 @@ def main():
   parser = argparse.ArgumentParser(description = 'Run a spikeforest processing batch')
   parser.add_argument('repository',help='The name of the repository',nargs='*')
   parser.add_argument('--port',help='Port to listen on', default='3000')
-  parser.add_argument('--expose_port','-p',help='Port to expose', action='append')
+  parser.add_argument('--expose_port','-p',help='Port to expose (docker-style). Example: -p 1000 -p 2000:3000 -p 4001-4005 -p 5001:5003:6001-6003', action='append')
   parser.add_argument('--volume','-v',help='Directory to mount', action='append')
   parser.add_argument('--image',help='The docker image to use',default=None)
   parser.add_argument('--host_working_directory','-w',help='The working directory on the host to use',default=None)
