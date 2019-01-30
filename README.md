@@ -4,7 +4,7 @@ Self-hosted [gitpod](https://gitpod.io/)-style workspaces for github repositorie
 
 ## Objectives
 
-Philosophy and beliefs:
+Philosophy:
 
 1. Every repository should have a single-click method for trying it out within a browser using a cloud-backed container with customizable environment.
 2. That container/environment should also serve as a fully-functional development environment with a rich browser-based IDE (e.g., Theia) and the ability to push changes back to the original repository or to a forked version.
