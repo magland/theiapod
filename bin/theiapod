@@ -8,12 +8,14 @@ def main():
   parser.add_argument('repository',help='The name of the repository',nargs='*')
   parser.add_argument('--port',help='Port to listen on', default='3000')
   parser.add_argument('--expose_port','-p',help='Port to expose', action='append')
+  parser.add_argument('--volume','-v',help='Directory to mount', action='append')
   parser.add_argument('--image',help='The docker image to use',default=None)
   parser.add_argument('--host_working_directory','-w',help='The working directory on the host to use',default=None)
 
   args = parser.parse_args()
 
   expose_ports=_get_expose_ports_from_arg_list(args.expose_port)
+  volumes=_get_volumes_from_arg_list(args.volume)
 
   if args.repository:
     args.repository=args.repository[0]
@@ -23,8 +25,23 @@ def main():
     port=int(args.port),
     image=args.image,
     expose_ports=expose_ports,
+    volumes=volumes,
     host_working_directory=args.host_working_directory
   )
+
+def _get_volumes_from_arg_list(A):
+  if not A:
+    return []
+  volumes=[]
+  for aa in A:
+    vals=aa.split(':')
+    if len(vals)==1:
+      volumes.append((vals[0],vals[0]))
+    elif len(vals)==2:
+      volumes.append((vals[0],vals[1]))
+    else:
+      raise Exception('Invalid volume')
+  return volumes
 
 def _get_expose_ports_from_arg_list(A):
   if not A:

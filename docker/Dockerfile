@@ -24,10 +24,10 @@ RUN apt-get install sudo
 RUN echo "python version:" && python --version
 
 RUN pip install pyyaml
-RUN pip install jupyterlab
+RUN apt-get install nano
+
+RUN python3 -m venv /venv
+RUN . /venv/bin/activate && pip install pyyaml
 
 COPY entrypoint.sh /entrypoint.sh
-#RUN chown gitpod:gitpod /entrypoint.sh
-#RUN chown gitpod:gitpod /home
 ENTRYPOINT ["/entrypoint.sh"]
-#ENTRYPOINT ["/bin/bash"]

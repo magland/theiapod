@@ -8,7 +8,7 @@ import yaml
 
 src_dir=os.path.dirname(os.path.realpath(__file__))
 
-def theiapod(*,repository='',port=3000,image=None,expose_ports=[],mount_tmp=True,host_working_directory=None):
+def theiapod(*,repository='',port=3000,image=None,expose_ports=[],volumes=[],mount_tmp=True,host_working_directory=None):
     if host_working_directory is None:
         if not repository:
             raise Exception('You must either specify a repository or a host working directory.')
@@ -22,8 +22,9 @@ def theiapod(*,repository='',port=3000,image=None,expose_ports=[],mount_tmp=True
         config=_parse_yaml(host_working_directory+'/.theiapod.yml')
     else:
         config=_parse_yaml(host_working_directory+'/.gitpod.yml')
-        if 'image' in config:
-            config['image']=None # don't use the gitpod image
+        if config:
+            if 'image' in config:
+                config['image']=None # don't use the gitpod image
     if not config:
         config={}
 
@@ -51,6 +52,12 @@ def theiapod(*,repository='',port=3000,image=None,expose_ports=[],mount_tmp=True
             opts.append('-p {}:{}'.format(pp[0],pp[1]))
         else:
             opts.append('-p {}:{}'.format(pp,pp))
+
+    for vv in volumes:
+        if type(vv)==tuple:
+            opts.append('-v {}:{}'.format(vv[0],vv[1]))
+        else:
+            raise Exception('volumes must be tuples.')
 
     cmd='docker run {opts} {image} /home/project {port} {user} {uid}'
     #cmd='docker run {opts} {image}'
