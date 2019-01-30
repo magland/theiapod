@@ -52,9 +52,9 @@ def _get_expose_ports_from_arg_list(A):
     for pp in list:
       vals=pp.split(':')
       if len(vals)==1:
-        expose_ports.append(int(vals[0]))
+        expose_ports.append(vals[0])
       elif len(vals)==2:
-        expose_ports.append((int(vals[0]),int(vals[1])))
+        expose_ports.append((vals[0],vals[1]))
       else:
         raise Exception('Invalid expose_port.')
   return expose_ports
