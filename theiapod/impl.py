@@ -77,6 +77,11 @@ def theiapod(*,repository='',port=3000,image=None,expose_ports=[],volumes=[],mou
         else:
             raise Exception('volumes must be tuples.')
 
+    try:
+        _run_command_and_print_output('docker pull {image}'.format(image=image))
+    except:
+        print('WARNING: failed to pull docker image: {image}'.format(image=image))
+
     cmd='docker run {opts} {image} /home/project {port} {user} {uid}'
     #cmd='docker run {opts} {image}'
     cmd=cmd.replace('{opts}',' '.join(opts))
