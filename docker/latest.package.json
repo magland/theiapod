@@ -14,7 +14,21 @@
         "@theia/search-in-workspace": "latest",
         "@theia/json": "latest",
         "@theia/mini-browser": "latest",
-        "@theia/preview": "latest"
+        "@theia/preview": "latest",
+        "@theia/typescript": "latest",
+        "@theia/output": "latest",
+        "@theia/console": "latest",
+        "@theia/tslint": "latest",
+        "@theia/cpp": "latest"
+    },
+    "trial_dependencies": {
+        "@theia/merge-conflicts": "latest",
+        "@theia/editor": "latest",
+        "@theia/editor-preview": "latest",
+        "@theia/filesystem": "latest"
+    },
+    "problematic": {
+        "@theia/yaml": "latest"
     },
     "devDependencies": {
         "@theia/cli": "latest"
