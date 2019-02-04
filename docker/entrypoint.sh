@@ -40,7 +40,6 @@ if [ -f "/theiapod_init" ]; then
 fi
 cd /home/theia
 yarn theia start $PROJECT_DIRECTORY --hostname=0.0.0.0 --port=$PORT
-... 
 EOL
 chmod a+x /the_script.sh
 
