@@ -36,7 +36,7 @@ cd $PROJECT_DIRECTORY
 source /venv/bin/activate
 if [ -f "/theiapod_init" ]; then
 	echo "RUNNING /theiapod_init"
-	/theiapod_init
+	python theiapod_init
 fi
 cd /home/theia
 yarn theia start $PROJECT_DIRECTORY --hostname=0.0.0.0 --port=$PORT
