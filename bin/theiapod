@@ -11,6 +11,7 @@ def main():
   parser.add_argument('--volume','-v',help='Directory to mount', action='append')
   parser.add_argument('--image',help='The docker image to use',default=None)
   parser.add_argument('--host_working_directory','-w',help='The working directory on the host to use',default=None)
+  parser.add_argument('--docker_opts',help='Additional options to send to docker',default=None)
 
   args = parser.parse_args()
 
@@ -26,7 +27,8 @@ def main():
     image=args.image,
     expose_ports=expose_ports,
     volumes=volumes,
-    host_working_directory=args.host_working_directory
+    host_working_directory=args.host_working_directory,
+    docker_opts=args.docker_opts
   )
 
 def _get_volumes_from_arg_list(A):

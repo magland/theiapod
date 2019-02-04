@@ -9,7 +9,10 @@ UID_=$4
 
 useradd -l -u $UID_ -G sudo -md /home/$USER -s /bin/bash -p $USER $USER
 sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
-chown -R $USER:$USER /venv
+#chown -R $USER:$USER /venv
+mv /venv /venv_hack
+mkdir /venv
+chown $USER:$USER /venv
 
 #chown -R $USER:$USER $PROJECT_DIRECTORY
 #if [ -f "/theiapod_init" ]; then
@@ -33,6 +36,8 @@ if [ -d /home/theiapod ]; then
 fi
 
 cd $PROJECT_DIRECTORY
+cp -r /venv_hack/* /venv/
+
 source /venv/bin/activate
 if [ -f "/theiapod_init" ]; then
 	echo "RUNNING python /theiapod_init"
@@ -43,4 +48,4 @@ yarn theia start $PROJECT_DIRECTORY --hostname=0.0.0.0 --port=$PORT
 EOL
 chmod a+x /the_script.sh
 
-sudo -u $USER bash -c "PROJECT_DIRECTORY=$PROJECT_DIRECTORY PORT=$PORT /the_script.sh"
+sudo -u $USER bash -c "PROJECT_DIRECTORY=$PROJECT_DIRECTORY PORT=$PORT USER=$USER /the_script.sh"

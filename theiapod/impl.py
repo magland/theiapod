@@ -8,7 +8,11 @@ import yaml
 
 src_dir=os.path.dirname(os.path.realpath(__file__))
 
-def theiapod(*,repository='',port=3000,image=None,expose_ports=[],volumes=[],mount_tmp=True,host_working_directory=None):
+def theiapod(*,repository='',port=3000,image=None,expose_ports=[],volumes=[],mount_tmp=True,host_working_directory=None,docker_opts=None):
+    if not docker_opts:
+        docker_opts=''
+    if docker_opts.startswith('"'):
+        docker_opts=docker_opts[1:-1]
     if host_working_directory is None:
         if not repository:
             raise Exception('You must either specify a repository or a host working directory.')
@@ -82,9 +86,10 @@ def theiapod(*,repository='',port=3000,image=None,expose_ports=[],volumes=[],mou
     except:
         print('WARNING: failed to pull docker image: {image}'.format(image=image))
 
-    cmd='docker run {opts} {image} /home/project {port} {user} {uid}'
+    cmd='docker run {opts} {docker_opts} {image} /home/project {port} {user} {uid}'
     #cmd='docker run {opts} {image}'
     cmd=cmd.replace('{opts}',' '.join(opts))
+    cmd=cmd.replace('{docker_opts}',docker_opts)
     cmd=cmd.replace('{src_dir}',src_dir)
     cmd=cmd.replace('{image}',image)
     # cmd=cmd.replace('{repository}',repository)
