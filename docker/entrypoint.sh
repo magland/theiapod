@@ -13,6 +13,7 @@ sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /
 mv /venv /venv_hack
 mkdir /venv
 chown $USER:$USER /venv
+chown $USER:$USER /home/theia
 
 #chown -R $USER:$USER $PROJECT_DIRECTORY
 #if [ -f "/theiapod_init" ]; then

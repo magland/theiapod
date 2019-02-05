@@ -1,7 +1,5 @@
 FROM python:3.7-stretch
 
-#RUN apt-get update && apt-get install -y software-properties-common
-
 # Node
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update && apt-get install nodejs
@@ -12,7 +10,15 @@ RUN npm install -g yarn
 RUN apt-get install sudo
 RUN pip install pyyaml
 RUN apt-get install nano
-RUN python3 -m venv /venv
+
+# Create a python virtual environment
+# Ultimately this venv will be owned by the non-root user
+# But we do not yet know the UID of that user, so until run-time it will be owned by root
+# There is a reason we do a symbolic link from /venv to /venv2
+# It is because on some systems, a chown or mv mysteriously takes a very long time
+# Whereas copying the files does not take very long.
+# Therefore we set it up so that the mv just moves the symbolic link
+RUN python3 -m venv /venv && mv /venv /venv2 && ln -s /venv2 /venv 
 RUN . /venv/bin/activate && pip install pyyaml
 
 ## Theia
