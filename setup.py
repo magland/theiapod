@@ -13,6 +13,7 @@ setuptools.setup(
     scripts=['bin/theiapod'],
     package_data={},
     install_requires=[
+        "pyyaml",
     ],
     classifiers=(
         "Programming Language :: Python :: 3",
